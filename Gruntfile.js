@@ -13,7 +13,6 @@ module.exports = function(grunt) {
       files: [
         '**/*.js',
         'Gruntfile.js',
-        '!bower_components/**/*',
         '!node_modules/**/*',
         '!browser/example/lib/**/*',
         '!browser/dist/**/*',
@@ -52,8 +51,7 @@ module.exports = function(grunt) {
         src: [ '<%= pkg.name %>.js' ],
         dest: './browser/dist/<%= pkg.name %>.standalone.js',
         options: {
-          standalone: '<%= pkg.name %>',
-          transform: ['debowerify', 'deamdify']
+          standalone: '<%= pkg.name %>'
         }
       },
       // This browserify build can be required by other browserify modules that
@@ -63,8 +61,7 @@ module.exports = function(grunt) {
         src: [ '<%= pkg.name %>.js' ],
         dest: './browser/dist/<%= pkg.name %>.require.js',
         options: {
-          alias: [ './<%= pkg.name %>.js:' ],
-          transform: ['debowerify', 'deamdify']
+          alias: [ './<%= pkg.name %>.js:' ]
         }
       },
       // These are the browserified tests. We need to browserify the tests to be
@@ -78,8 +75,7 @@ module.exports = function(grunt) {
         options: {
           external: [ './<%= pkg.name %>.js' ],
           // Embed source map for tests
-          debug: true,
-          transform: ['debowerify', 'deamdify']
+          debug: true
         }
       }
     },
@@ -139,7 +135,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     'jshint',
-    //'mochaTest',
+    'mochaTest',
     'clean',
     'browserify',
     'uglify',

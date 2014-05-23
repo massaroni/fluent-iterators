@@ -23,9 +23,7 @@ pushd $bin_path/.. > /dev/null
 browserify \
   --entry iteratorutils.js \
   --outfile browser/dist/iteratorutils.standalone.js \
-  --standalone iterator_utils \
-  --transform debowerify \
-  --transform deamdify
+  --standalone iterator_utils
 
 # This browserify build can be required by other browserify modules that
 # have been created with an --external parameter. See
@@ -33,9 +31,7 @@ browserify \
 browserify \
   --entry iteratorutils.js \
   --outfile browser/dist/iteratorutils.require.js \
-  --require ./iteratorutils \
-  --transform debowerify \
-  --transform deamdify
+  --require ./iteratorutils
 
 # These are the browserified tests. We need to browserify the tests to be
 # able to run the mocha tests while writing the tests as clean, simple
@@ -45,8 +41,6 @@ browserify \
 browserify \
   --entry browser/test/suite.js \
   --outfile browser/test/browserified_tests.js \
-  --external ./iteratorutils.js \
-  --transform debowerify \
-  --transform deamdify
+  --external ./iteratorutils.js
 
 popd > /dev/null
