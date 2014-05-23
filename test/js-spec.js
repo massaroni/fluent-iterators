@@ -36,31 +36,6 @@ describe('Js tests', function() {
     expect(Js.isInteger('123')).to.equal(true);
   });
 
-  it('functions are functions', function () {
-    expect(Js.isFunction(function () {
-    })).to.equal(true);
-  });
-
-  it('numbers are not functions', function () {
-    expect(Js.isFunction(123)).to.equal(false);
-  });
-
-  it('strings are not functions', function () {
-    expect(Js.isFunction('s')).to.equal(false);
-  });
-
-  it('objects are not functions', function () {
-    expect(Js.isFunction({})).to.equal(false);
-  });
-
-  it('arrays are not functions', function () {
-    expect(Js.isFunction([])).to.equal(false);
-  });
-
-  it('Function.prototype.bind should be defined', function () {
-    expect(Js.isFunction(Function.prototype.bind)).to.equal(true);
-  });
-
   it('integer numbers are obviously valid integers', function () {
     expect(Js.isInteger(123)).to.equal(true);
   });
@@ -85,22 +60,6 @@ describe('Js tests', function() {
     expect(Js.isInteger(undefined)).to.equal(false);
   });
 
-  it('undefined is not a string', function () {
-    expect(Js.isString(undefined)).to.equal(false);
-  });
-
-  it('null is not a string', function () {
-    expect(Js.isString(null)).to.equal(false);
-  });
-
-  it('a number is not a string', function () {
-    expect(Js.isString(123)).to.equal(false);
-  });
-
-  it('a string of digits is a string', function () {
-    expect(Js.isString('123')).to.equal(true);
-  });
-
   it('a string of digits is not an integer number', function () {
     expect(Js.isIntegerNumber('123')).to.equal(false);
   });
@@ -123,62 +82,6 @@ describe('Js tests', function() {
 
   it('an object is not an an integer number', function () {
     expect(Js.isIntegerNumber({number: 123})).to.equal(false);
-  });
-
-  it('an empty array', function () {
-    expect(Js.isArray([])).to.equal(true);
-  });
-
-  it('an array with something in it', function () {
-    expect(Js.isArray([5, 'something'])).to.equal(true);
-  });
-
-  it('an empty map', function () {
-    expect(Js.isArray({})).to.equal(false);
-  });
-
-  it('an integer', function () {
-    expect(Js.isArray(2)).to.equal(false);
-  });
-
-  it('a string', function () {
-    expect(Js.isArray('abc')).to.equal(false);
-  });
-
-  it('null is not an array', function () {
-    expect(Js.isArray(null)).to.equal(false);
-  });
-
-  it('undefined is not an array', function () {
-    expect(Js.isArray(undefined)).to.equal(false);
-  });
-
-  it('no arguments is not an array', function () {
-    expect(Js.isArray()).to.equal(false);
-  });
-
-  it('an empty array is not an object', function () {
-    expect(Js.isObject([])).to.equal(false);
-  });
-
-  it('a string is not an object', function () {
-    expect(Js.isObject('foo')).to.equal(false);
-  });
-
-  it('a number is not an object', function () {
-    expect(Js.isObject(123)).to.equal(false);
-  });
-
-  it('null is not an object', function () {
-    expect(Js.isObject(null)).to.equal(false);
-  });
-
-  it('undefined is not an object', function () {
-    expect(Js.isObject(undefined)).to.equal(false);
-  });
-
-  it('an object is an object', function () {
-    expect(Js.isObject({x: 1})).to.equal(true);
   });
 
 });
