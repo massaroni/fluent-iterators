@@ -1,13 +1,12 @@
 'use strict';
 
 var Js = require('../lib/js');
-var Preconditions = require('../lib/preconditions');
 
 var chai = require('chai');
 var expect = chai.expect;
 
 
-describe('Js and Preconditions tests', function() {
+describe('Js tests', function() {
 
   it('should replace 1 %s with 1 string argument', function() {
     expect(Js.formatString('a%s', 'b')).to.equal('ab');
@@ -58,48 +57,8 @@ describe('Js and Preconditions tests', function() {
     expect(Js.isFunction([])).to.equal(false);
   });
 
-  it('Preconditions global should be defined', function () {
-    expect(!!Preconditions).to.equal(true);
-  });
-
-  it('Preconditions.checkArgument global should be a function', function () {
-    expect(Js.isFunction(Preconditions.checkArgument)).to.equal(true);
-  });
-
-  it('Preconditions.checkState global should be defined', function () {
-    expect(Js.isFunction(Preconditions.checkState)).to.equal(true);
-  });
-
   it('Function.prototype.bind should be defined', function () {
     expect(Js.isFunction(Function.prototype.bind)).to.equal(true);
-  });
-
-  it('should not throw an exception for true', function () {
-    expect(Preconditions.checkArgument.bind(null, true, 'error message')).not.to.throw();
-  });
-
-  it('should not throw an exception for object', function () {
-    expect(Preconditions.checkArgument.bind(null, {}, 'error message')).not.to.throw();
-  });
-
-  it('should not throw an exception for 0', function () {
-    expect(Preconditions.checkArgument.bind(null, 0, 'error message')).not.to.throw();
-  });
-
-  it('should not throw an exception for -1', function () {
-    expect(Preconditions.checkArgument.bind(null, -1, 'error message')).not.to.throw();
-  });
-
-  it('should throw an exception for undefined', function () {
-    expect(Preconditions.checkArgument.bind(null, undefined, 'error message')).to.throw(Error);
-  });
-
-  it('should throw an exception for null', function () {
-    expect(Preconditions.checkArgument.bind(null, null, 'error message')).to.throw(Error);
-  });
-
-  it('should throw an exception for false', function () {
-    expect(Preconditions.checkArgument.bind(null, false, 'error message')).to.throw(Error);
   });
 
   it('integer numbers are obviously valid integers', function () {

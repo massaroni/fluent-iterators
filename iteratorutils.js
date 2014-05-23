@@ -1,15 +1,15 @@
 'use strict';
 
 var Js = require('./lib/js');
-var Preconditions = require('./lib/preconditions');
+var Preconditions = require('precondition');
 var _ = require('underscore');
 var PriorityQueue = require('priorityqueuejs');
 require('sugar');
 
 
 var checkIsIterator = function (iterator) {
-  Preconditions.checkArgument(_.isObject(iterator), 'Illegal iterator: Not an object.');
-  Preconditions.checkArgument(_.isFunction(iterator.next), 'Illegal iterator: Missing next() function.');
+  Preconditions.check(_.isObject(iterator), 'Illegal iterator: Not an object.');
+  Preconditions.check(_.isFunction(iterator.next), 'Illegal iterator: Missing next() function.');
 };
 
 /**
@@ -20,7 +20,7 @@ var checkIsIterator = function (iterator) {
  * @constructor
  */
 exports.ArrayIterator = function (content) {
-  Preconditions.checkArgument(_.isArray(content), 'Expected array content, but was %s', content);
+  Preconditions.checkType(_.isArray(content), 'Expected array content, but was %s', content);
 
   var i = 0;
 
@@ -59,12 +59,12 @@ var strictEquality = function (lhs, rhs) {
  */
 exports.IteratorAggregator = function (delegateIterator, reduce, isEqual) {
   checkIsIterator(delegateIterator);
-  Preconditions.checkArgument(_.isFunction(reduce), 'Undefined reducer function.');
+  Preconditions.checkType(_.isFunction(reduce), 'Undefined reducer function.');
 
   if (Js.isNothing(isEqual)) {
     isEqual = strictEquality;
   } else {
-    Preconditions.checkArgument(_.isFunction(isEqual), 'Expected isEqual function, but was %s', isEqual);
+    Preconditions.checkType(_.isFunction(isEqual), 'Expected isEqual function, but was %s', isEqual);
   }
 
   var nextItem;
@@ -124,12 +124,12 @@ var reverseComparator = function (comparator) {
  * @constructor
  */
 exports.SortedIteratorMerger = function (iterators, comparator) {
-  Preconditions.checkArgument(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
+  Preconditions.checkType(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
 
   if (Js.isNothing(comparator)) {
     comparator = naturalComparatorDesc;
   } else {
-    Preconditions.checkArgument(_.isFunction(comparator), 'Expected a comparator function, but was %s', comparator);
+    Preconditions.checkType(_.isFunction(comparator), 'Expected a comparator function, but was %s', comparator);
     comparator = reverseComparator(comparator);
   }
 
@@ -176,7 +176,7 @@ exports.SortedIteratorMerger = function (iterators, comparator) {
 };
 
 exports.MemoizedIteratorReplay = function (memoized) {
-  Preconditions.checkArgument(memoized instanceof exports.MemoizedIterator);
+  Preconditions.checkType(memoized instanceof exports.MemoizedIterator);
   var index = 0;
 
   this.next = function () {
@@ -204,8 +204,8 @@ exports.MemoizedIterator = function (iterator) {
   };
 
   this.at = function (index) {
-    Preconditions.checkArgument(Js.isIntegerNumber(index), 'Illegal index: %s', index);
-    Preconditions.checkArgument(index >= 0, 'Index out of bounds: %s', index);
+    Preconditions.check(Js.isIntegerNumber(index), 'Illegal index: %s', index);
+    Preconditions.checkRange(index >= 0, 'Index out of bounds: %s', index);
 
     if (index < history.length) {
       return history[index];
@@ -235,7 +235,7 @@ exports.Iterator.prototype.aggregate = function (reducer, isEqual) {
 };
 
 exports.Iterator.prototype.mergeSortedIterators = function (iterators, comparator) {
-  Preconditions.checkArgument(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
+  Preconditions.checkType(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
   var allIterators = iterators.clone();
   allIterators.push(this);
   return new exports.SortedIteratorMerger(allIterators, comparator);

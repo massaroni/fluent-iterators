@@ -31,6 +31,14 @@ describe('Iterator Utils', function () {
     expect(stream.next()).to.equal(null);
   });
 
+  it('should reject a non-array argument to the ArrayIterator ctor.', function () {
+    var tripsPrecondition = function () {
+      return new Iterators.ArrayIterator(1234);
+    };
+
+    expect(tripsPrecondition).to.throw(TypeError);
+  });
+
   it('should aggregate duplicate items based on an equality function paramter.', function () {
     var stream = [{x:1}, {x:5}, {x:5}, {x:2}].iterator().aggregate(
       function (lhs, rhs) {

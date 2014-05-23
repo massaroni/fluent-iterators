@@ -13,7 +13,8 @@
   "main": "./iteratorutils",
   "dependencies": {
     "underscore": "~1.6.0",
-    "priorityqueuejs": "~0.2.0"
+    "priorityqueuejs": "~0.2.0",
+    "precondition": "1.0.0"
   },
   "devDependencies": {
     "browserify": "~3.24.13",
