@@ -1,0 +1,256 @@
+'use strict';
+
+var Js = require('./lib/js');
+var Preconditions = require('./lib/preconditions');
+var _ = require('underscore');
+var PriorityQueue = require('priorityqueuejs');
+require('sugar');
+
+
+var checkIsIterator = function (iterator) {
+  Preconditions.checkArgument(_.isObject(iterator), 'Illegal iterator: Not an object.');
+  Preconditions.checkArgument(_.isFunction(iterator.next), 'Illegal iterator: Missing next() function.');
+};
+
+/**
+ * Build an iterator that iterates over an array once. This skips over any null or undefined elements,
+ * and only returns null to indicate end-of-stream.
+ *
+ * @param content
+ * @constructor
+ */
+exports.ArrayIterator = function (content) {
+  Preconditions.checkArgument(_.isArray(content), 'Expected array content, but was %s', content);
+
+  var i = 0;
+
+  this.next = function () {
+    while (i < content.length) {
+      var item = content[i++];
+
+      if (Js.isSomething(item)) {
+        return item;
+      }
+    }
+
+    return null;
+  };
+};
+
+/**
+ * Extending Array with an iterator() factory method, as syntactic sugar for instantiating new
+ * iterators that iterate over arrays.
+ *
+ * @returns {Iterators.ArrayIterator}
+ */
+Array.prototype.iterator = function () {
+  return new exports.ArrayIterator(this);
+};
+
+var strictEquality = function (lhs, rhs) {
+  return lhs === rhs;
+};
+
+/**
+ * Reduce contiguous equal objects returned by a delegate iterator.
+ * This iterator will call ahead to the delegate iterator, and buffer the next item.
+ *
+ * @constructor
+ */
+exports.IteratorAggregator = function (delegateIterator, reduce, isEqual) {
+  checkIsIterator(delegateIterator);
+  Preconditions.checkArgument(_.isFunction(reduce), 'Undefined reducer function.');
+
+  if (Js.isNothing(isEqual)) {
+    isEqual = strictEquality;
+  } else {
+    Preconditions.checkArgument(_.isFunction(isEqual), 'Expected isEqual function, but was %s', isEqual);
+  }
+
+  var nextItem;
+  var pullCount = 0;
+
+  var pullNext = function () {
+    var next = delegateIterator.next();
+    pullCount++;
+    return next;
+  };
+
+  this.next = function () {
+    if (pullCount < 1) {
+      nextItem = pullNext();
+    }
+
+    if (Js.isNothing(nextItem)) {
+      return null;
+    }
+
+    var reduced = nextItem;
+
+    var cursorItem = pullNext();
+
+    while (isEqual(cursorItem, nextItem)) {
+      reduced = reduce(cursorItem, reduced);
+      cursorItem = pullNext();
+    }
+
+    nextItem = cursorItem;
+    return reduced;
+  };
+};
+
+var naturalComparatorDesc = function (lhs, rhs) {
+  if (lhs < rhs) {
+    return 1;
+  }
+
+  if (lhs === rhs) {
+    return 0;
+  }
+
+  return -1;
+};
+
+var reverseComparator = function (comparator) {
+  return function (lhs, rhs) {
+    return - comparator(lhs, rhs);
+  };
+};
+
+/**
+ *
+ * @param iterators - an array of iterators returning objects in the same sorted order
+ * @param comparator - (optional) compares order of iterator output objects, in ascending order.
+ * @constructor
+ */
+exports.SortedIteratorMerger = function (iterators, comparator) {
+  Preconditions.checkArgument(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
+
+  if (Js.isNothing(comparator)) {
+    comparator = naturalComparatorDesc;
+  } else {
+    Preconditions.checkArgument(_.isFunction(comparator), 'Expected a comparator function, but was %s', comparator);
+    comparator = reverseComparator(comparator);
+  }
+
+  iterators = iterators.clone(); // capture original iterator ordinals
+
+  var wrapperComparator = function (lhs, rhs) {
+    return comparator(lhs.item, rhs.item);
+  };
+
+  // initialize the buffer
+  var buffer = new PriorityQueue(wrapperComparator);
+
+  for (var i = 0; i < iterators.length; i++) {
+    var iterator = iterators[i];
+    checkIsIterator(iterator);
+    var item = iterator.next();
+
+    if (Js.isSomething(item)) {
+      buffer.enq({index: i, item: item});
+    }
+  }
+
+  // pull the next event from the cursors
+  this.next = function () {
+    if (buffer.size() < 1) {
+      return null;
+    }
+
+    var wrapper = buffer.deq();
+
+    if (Js.isNothing(wrapper)) {
+      return null;
+    }
+
+    var sourceIndex = wrapper.index;
+    var replacement = iterators[sourceIndex].next();
+
+    if (Js.isSomething(replacement)) {
+      buffer.enq({index: sourceIndex, item: replacement});
+    }
+
+    return wrapper.item;
+  };
+};
+
+exports.MemoizedIteratorReplay = function (memoized) {
+  Preconditions.checkArgument(memoized instanceof exports.MemoizedIterator);
+  var index = 0;
+
+  this.next = function () {
+    return memoized.at(index++);
+  };
+};
+
+/**
+ * Record all items returned by an interator, so that another one can replay through
+ * them later. The replayer can also iterate past the position of this iterator, in which case
+ * the new items will be cached and ready for the subsequent next() call on this iterator.
+ *
+ * @param iterator
+ * @constructor
+ */
+exports.MemoizedIterator = function (iterator) {
+  checkIsIterator(iterator);
+
+  var history = [];
+
+  var pullNext = function () {
+    var item = iterator.next();
+    history.push(item);
+    return item;
+  };
+
+  this.at = function (index) {
+    Preconditions.checkArgument(Js.isIntegerNumber(index), 'Illegal index: %s', index);
+    Preconditions.checkArgument(index >= 0, 'Index out of bounds: %s', index);
+
+    if (index < history.length) {
+      return history[index];
+    }
+
+    if (index === history.length) {
+      return pullNext();
+    }
+
+    throw new Error('Index out of bounds: ' + index);
+  };
+
+  this.replay = function () {
+    return new exports.MemoizedIteratorReplay(this);
+  };
+
+  var cursor = this.replay();
+
+  this.next = cursor.next;
+};
+
+exports.Iterator = function () {
+};
+
+exports.Iterator.prototype.aggregate = function (reducer, isEqual) {
+  return new exports.IteratorAggregator(this, reducer, isEqual);
+};
+
+exports.Iterator.prototype.mergeSortedIterators = function (iterators, comparator) {
+  Preconditions.checkArgument(_.isArray(iterators), 'Expected an array of iterators, but was %s', iterators);
+  var allIterators = iterators.clone();
+  allIterators.push(this);
+  return new exports.SortedIteratorMerger(allIterators, comparator);
+};
+
+exports.Iterator.prototype.memoize = function () {
+  return new exports.MemoizedIterator(this);
+};
+
+Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.ArrayIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.MemoizedIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.MemoizedIteratorReplay.prototype, exports.Iterator.prototype, false);
+
+exports.mergeSortedIterators = function (iterators, comparator) {
+  return new exports.SortedIteratorMerger(iterators, comparator);
+};

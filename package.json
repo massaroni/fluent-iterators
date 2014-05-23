@@ -1,0 +1,56 @@
+{
+  "name": "iteratorutils",
+  "version": "0.0.1",
+  "author": "Kevin Massaroni",
+  "description": "Library for transforming endless iterators: merge, aggregate, memoize, etc.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/massaroni/iterator-utils"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "main": "./iteratorutils",
+  "dependencies": {
+    "underscore": "~1.6.0",
+    "priorityqueuejs": "~0.2.0"
+  },
+  "devDependencies": {
+    "browserify": "~3.24.13",
+    "debowerify": "~0.7.1",
+    "deamdify": "~0.1.1",
+    "chai": "~1.9.0",
+    "grunt": "~0.4.2",
+    "grunt-browserify": "~1.3.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-mocha-phantomjs": "~0.4.0",
+    "grunt-mocha-test": "~0.9.0",
+    "mocha": "~1.17.1",
+    "sinon": "~1.8.1",
+    "sinon-chai": "~2.5.0"
+  },
+  "browser": {
+    "./lib/echo.js": "./browser/lib/shim/echo.js",
+    "minimatch": "./browser/lib/shim/minimatch.js",
+    "util": "./browser/lib/shim/node-util.js",
+    "./lib/optional": false
+  },
+  "testling": {
+    "browsers": [
+      "ie9", "ie10",
+      "ff/15", "ff/20", "ff/23", "ff/nightly",
+      "chrome/29", "chrome/canary",
+      "opera/15", "opera/next",
+      "safari/6.0"
+    ],
+    "harness": "mocha",
+    "files": "test/*.js"
+  },
+  "engines": {
+    "node": ">= 0.10.x"
+  }
+}

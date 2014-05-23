@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Browserify Example With RequireJS</title>
+    <script src="lib/require.js"></script>
+  </head>
+  <body>
+    <p><span id="q1">[0, 2, 9, 10, 11, 20]</span></p>
+    <p><span id="q2">[1, 3, 3, 10, 12]</span></p>
+    <p><span id="a">It didn't work.</span></p>
+    <script>
+      require(['../dist/iteratorutils.standalone.min'], function(iterators) {
+          var i1 = [0, 2, 9, 10, 11, 20].iterator();
+          var i2 = new iterators.ArrayIterator([1, 3, 3, 10, 12]);
+
+          var merged = i1.mergeSortedIterators([i2]);
+
+          var str = 'merged: ';
+          var n = merged.next();
+
+          while (n !== null) {
+              str = str + ', ' + n;
+              n = merged.next();
+          }
+
+          document.getElementById('a').innerHTML = str;
+      });
+    </script>
+  </body>
+</html>

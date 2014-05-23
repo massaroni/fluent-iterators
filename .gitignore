@@ -1,0 +1,8 @@
+node_modules
+.idea
+*.iml
+bower_components
+
+# vim tmp files
+*.swp
+*.un~
