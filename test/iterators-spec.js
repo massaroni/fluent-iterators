@@ -269,4 +269,18 @@ describe('Iterator Utils', function () {
     expect(array.length).to.equal(2);
   });
 
+  it ('should transform items from a source array', function () {
+    var isEvenTransformer = function (item) {
+      return (item % 2) === 0;
+    };
+
+    var transformed = [0, 2, 3, 5, -2].iterator().transform(isEvenTransformer);
+
+    expect(transformed.next()).to.be.true;
+    expect(transformed.next()).to.be.true;
+    expect(transformed.next()).to.be.false;
+    expect(transformed.next()).to.be.false;
+    expect(transformed.next()).to.be.true;
+    expect(transformed.next()).to.be.null;
+  });
 });

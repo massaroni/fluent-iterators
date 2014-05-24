@@ -9,9 +9,11 @@ var util = require('./lib/util');
 
 var group = require('./lib/group');
 var windowReducer = require('./lib/window');
+var transformer = require('./lib/transformer');
 
 exports.GroupingIterator = group.GroupingIterator;
 exports.WindowReducerIterator = windowReducer.WindowReducerIterator;
+exports.TransformerIterator = transformer.TransformerIterator;
 
 /**
  * Build an iterator that iterates over an array once. This skips over any null or undefined elements,
@@ -281,6 +283,10 @@ exports.Iterator.prototype.window = function (windowSize, reducer) {
   return new windowReducer.WindowReducerIterator(this, windowSize, reducer);
 };
 
+exports.Iterator.prototype.transform = function (transformerFunction) {
+  return new transformer.TransformerIterator(this, transformerFunction);
+};
+
 // extend Iterator abstract class
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
@@ -290,6 +296,7 @@ Object.merge(exports.MemoizedIteratorReplay.prototype, exports.Iterator.prototyp
 Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.WindowReducerIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.IteratorWrapper.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.TransformerIterator.prototype, exports.Iterator.prototype, false);
 
 // utility functions
 exports.mergeSortedIterators = function (iterators, comparator) {
