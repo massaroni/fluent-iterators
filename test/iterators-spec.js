@@ -3,6 +3,7 @@
 var Iterators = require('../iteratorutils');
 
 var chai = require('chai');
+var sinon = require('sinon');
 var expect = chai.expect;
 
 
@@ -201,6 +202,55 @@ describe('Iterator Utils', function () {
     expect(Object.equal(grouped.next(), [{a:5, b:1}])).to.be.true;
     expect(Object.equal(grouped.next(), [{a:2, b:1}, {a:2, b:1}])).to.be.true;
     expect(grouped.next()).to.equal(null);
+  });
+
+  it('should transform an iterator into a sliding-window reduction, using the native array reduce() api.', function () {
+    var source = [8,9,3,5,0,7].iterator();
+
+    var sumReducer = function(previousValue, currentValue, index, array){
+      return previousValue + currentValue;
+    };
+
+    var sumReducerSpy = sinon.spy(sumReducer);
+
+    var reduced = source.window(2, sumReducerSpy);
+
+    expect(reduced.next()).to.equal(8);
+    expect(reduced.next()).to.equal(17);
+    expect(reduced.next()).to.equal(12);
+    expect(reduced.next()).to.equal(8);
+    expect(reduced.next()).to.equal(5);
+    expect(reduced.next()).to.equal(7);
+    expect(reduced.next()).to.equal(null);
+
+    expect(sumReducerSpy.callCount).to.equal(5);
+  });
+
+  it('should transform an iterator into a sliding-window reduction, using an accumulator object.', function () {
+    var source = [8,9,3,5,0,7].iterator();
+
+    var sum = 0;
+    var sumAccumulator = {
+      add : function (item) {
+        sum += item;
+      },
+      remove : function (item) {
+        sum -= item;
+      },
+      reduce : function () {
+        return sum;
+      }
+    };
+
+    var reduced = source.window(2, sumAccumulator);
+
+    expect(reduced.next()).to.equal(8);
+    expect(reduced.next()).to.equal(17);
+    expect(reduced.next()).to.equal(12);
+    expect(reduced.next()).to.equal(8);
+    expect(reduced.next()).to.equal(5);
+    expect(reduced.next()).to.equal(7);
+    expect(reduced.next()).to.equal(null);
   });
 
 });
