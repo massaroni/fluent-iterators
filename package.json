@@ -34,9 +34,6 @@
     "sinon-chai": "~2.5.0"
   },
   "browser": {
-    "./lib/echo.js": "./browser/lib/shim/echo.js",
-    "minimatch": "./browser/lib/shim/minimatch.js",
-    "util": "./browser/lib/shim/node-util.js",
     "./lib/optional": false
   },
   "testling": {
