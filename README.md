@@ -13,9 +13,11 @@ This build only runs in-browser tests, because mocha can't resolve the bower dep
 
 ## Examples
 
-According to this library, an "iterator" is any object that has a ```next()``` function.
+### Primer
 
-``` js
+According to this library, an "iterator" is any object that has a ```next()``` function, like this one:
+
+```javascript
 var c = 0;
 var myCounterIterator = {
   next: function () {
@@ -24,96 +26,72 @@ var myCounterIterator = {
 };
 ```
 
-There's no ```hasNext()``` function, so iterators indicate end-of-stream by returning null or undefined from the ```next()``` function.
+There's no ```hasNext()``` function, so iterators indicate end-of-stream by returning null or undefined from the ```next()``` function. This iterator terminates after 10 iterations:
 
-``` js
+```javascript
 var c = 0;
-var limit = 10;
 var myCounterIterator = {
   next: function () {
-    return c < limit ? c++ : null;
+    return c < 10 ? c++ : null;
   }
 };
 ```
 
 You can import this package a la CommonJS, and use exported classes. ArrayIterator will iterate over an array, once.
 
-``` js
-var iterators = require('iteratorutils');
+```javascript
 
-var it = new iterators.ArrayIterator([1, 2]);
+    var iterators = require('iteratorutils');
 
-it.next();
-// 1
+    var it = new iterators.ArrayIterator([1, 2]);
 
-it.next();
-// 2
-
-it.next();
-// null
+    it.next(); // 1
+    it.next(); // 2
+    it.next(); // null
 ```
 
 Or you can use syntactic sugar, but you still have to require the module.
 
-``` js
+```javascript
 var iterators = require('iteratorutils');
 
 var it = [1, 2].iterator();
 
-it.next();
-// 1
-
-it.next();
-// 2
-
-it.next();
-// null
+it.next(); // 1
+it.next(); // 2
+it.next(); // null
 ```
 
 You can merge sorted iterators into a single, sorted iterator.
 By default, it will use the items' natural ascending order.
 If your input iterators are out of order, then the merged iterator will also return items out of order.
 
-``` js
+```javascript
 var s1 = [1, 5, 5, 100, 101].iterator();
 var s2 = [0, 10, 20, 30, 40].iterator();
 var s3 = [9, 10, 11].iterator();
 
 var merged = s1.mergeSortedIterators([s2, s3]);
 
-merged.next();
-// 0
-merged.next();
-// 1
-merged.next();
-// 5
-merged.next();
-// 5
-merged.next();
-// 9
-merged.next();
-// 10
-merged.next();
-// 10
-merged.next();
-// 11
-merged.next();
-// 20
-merged.next();
-// 30
-merged.next();
-// 40
-merged.next();
-// 100
-merged.next();
-// 101
-merged.next();
-// null
+merged.next(); // 0
+merged.next(); // 1
+merged.next(); // 5
+merged.next(); // 5
+merged.next(); // 9
+merged.next(); // 10
+merged.next(); // 10
+merged.next(); // 11
+merged.next(); // 20
+merged.next(); // 30
+merged.next(); // 40
+merged.next(); // 100
+merged.next(); // 101
+merged.next(); // null
 ```
 
 Or you can provide your own comparator.
 
-``` js
+```javascript
 var s1 = [{x:1}, {x:5}, {x:5}, {x:100}, {x:101}].iterator();
 var s2 = [{x:0}, {x:10}, {x:20}, {x:30}, {x:40}].iterator();
 var s3 = [{x:9}, {x:10}, {x:11}].iterator();
@@ -124,39 +102,25 @@ var asc = function (lhs, rhs) {
 
 var merged = s1.mergeSortedIterators([s2, s3], asc);
 
-merged.next();
-// {x:0}
-merged.next();
-// {x:1}
-merged.next();
-// {x:5}
-merged.next();
-// {x:5}
-merged.next();
-// {x:9}
-merged.next();
-// {x:10}
-merged.next();
-// {x:10}
-merged.next();
-// {x:11}
-merged.next();
-// {x:20}
-merged.next();
-// {x:30}
-merged.next();
-// {x:40}
-merged.next();
-// {x:100}
-merged.next();
-// {x:101}
-merged.next();
-// null
+merged.next(); // {x:0}
+merged.next(); // {x:1}
+merged.next(); // {x:5}
+merged.next(); // {x:5}
+merged.next(); // {x:9}
+merged.next(); // {x:10}
+merged.next(); // {x:10}
+merged.next(); // {x:11}
+merged.next(); // {x:20}
+merged.next(); // {x:30}
+merged.next(); // {x:40}
+merged.next(); // {x:100}
+merged.next(); // {x:101}
+merged.next(); // null
 ```
 
 Or you can use the ```new``` keyword, with the exported class.
 
-``` js
+```javascript
 var iterators = require('iteratorutils');
 
 var s1 = [{x:1}, {x:5}, {x:5}, {x:100}, {x:101}].iterator();
@@ -169,10 +133,8 @@ var asc = function (lhs, rhs) {
 
 var merged = new iterators.SortedIteratorMerger([s1, s2, s3], asc);
 
-merged.next();
-// {x:0}
-merged.next();
-// {x:1}
+merged.next(); // {x:0}
+merged.next(); // {x:1}
 ...
 ```
 
@@ -182,7 +144,7 @@ because ```lhs``` is always ```null``` in the first iteration.
 Note: This api serves a very specific use case, and I'm working on a better ```reduce()``` function that doesn't depend
 on a concept of item equality.
 
-``` js
+```javascript
     var stream = [{x:1}, {x:5}, {x:5}, {x:2}].iterator().aggregate(
       function (lhs, rhs) {
         return {x: lhs.x + rhs.x };
@@ -198,16 +160,11 @@ on a concept of item equality.
     );
 
 
-summed.next().x;
-// 2
-summed.next().x;
-// 10
-summed.next().x;
-// 2
-summed.next().x;
-// 33
-summed.next();
-// null
+summed.next().x; // 2
+summed.next().x; // 10
+summed.next().x; // 2
+summed.next().x; // 33
+summed.next(); // null
 ```
 
 ## License
