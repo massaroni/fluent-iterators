@@ -253,4 +253,20 @@ describe('Iterator Utils', function () {
     expect(reduced.next()).to.equal(null);
   });
 
+  it('should drain an iterator into an array.', function () {
+    var count = 0;
+    var iterator = {
+      next: function () {
+        return count > 1 ? null : count++;
+      }
+    };
+
+    var array = Iterators.asIterator(iterator).toArray();
+
+    expect(array).instanceof(Array);
+    expect(array[0]).to.equal(0);
+    expect(array[1]).to.equal(1);
+    expect(array.length).to.equal(2);
+  });
+
 });

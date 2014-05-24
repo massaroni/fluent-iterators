@@ -225,11 +225,37 @@ exports.MemoizedIterator = function (iterator) {
 };
 
 /**
+ * Use a wrapper to wrap custom iterators so that you can call fluent iterator functions on it.
+ *
+ * @param iterator
+ * @constructor
+ */
+exports.IteratorWrapper = function (iterator) {
+  util.checkIsIterator(iterator);
+
+  this.next = function () {
+    return iterator.next();
+  };
+};
+
+/**
  * This is a superclass for all iterators, with fluent factory methods to layer on any other kind of iterator.
  *
  * @constructor
  */
 exports.Iterator = function () {
+};
+
+exports.Iterator.prototype.toArray = function () {
+  var buffer = [];
+  var item = this.next();
+
+  while (Js.isSomething(item)) {
+    buffer.push(item);
+    item = this.next();
+  }
+
+  return buffer;
 };
 
 exports.Iterator.prototype.aggregate = function (reducer, isEqual) {
@@ -263,8 +289,13 @@ Object.merge(exports.MemoizedIterator.prototype, exports.Iterator.prototype, fal
 Object.merge(exports.MemoizedIteratorReplay.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.WindowReducerIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.IteratorWrapper.prototype, exports.Iterator.prototype, false);
 
 // utility functions
 exports.mergeSortedIterators = function (iterators, comparator) {
   return new exports.SortedIteratorMerger(iterators, comparator);
+};
+
+exports.asIterator = function (iterator) {
+  return new exports.IteratorWrapper(iterator);
 };
