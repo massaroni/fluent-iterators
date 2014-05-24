@@ -222,6 +222,11 @@ exports.MemoizedIterator = function (iterator) {
   this.next = cursor.next;
 };
 
+/**
+ * This is a superclass for all iterators, with fluent factory methods to layer on any other kind of iterator.
+ *
+ * @constructor
+ */
 exports.Iterator = function () {
 };
 
@@ -240,12 +245,19 @@ exports.Iterator.prototype.memoize = function () {
   return new exports.MemoizedIterator(this);
 };
 
+exports.Iterator.prototype.group = function (isSameGroup) {
+  return new group.GroupingIterator(this, isSameGroup);
+};
+
+// extend Iterator abstract class
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.ArrayIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.MemoizedIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.MemoizedIteratorReplay.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, false);
 
+// utility functions
 exports.mergeSortedIterators = function (iterators, comparator) {
   return new exports.SortedIteratorMerger(iterators, comparator);
 };

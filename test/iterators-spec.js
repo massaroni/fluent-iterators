@@ -192,4 +192,15 @@ describe('Iterator Utils', function () {
     expect(grouped.next()).to.equal(null);
   });
 
+  it('should provide a fluent group() function on all iterators.', function () {
+    var source = [{a:5, b:1}, {a:2, b:1}, {a:2, b:1}].iterator();
+    var grouped = source.group(function (lhs, rhs) {
+      return lhs.a === rhs.a; // this function doesn't need to handle null end-of-stream tokens
+    });
+
+    expect(Object.equal(grouped.next(), [{a:5, b:1}])).to.be.true;
+    expect(Object.equal(grouped.next(), [{a:2, b:1}, {a:2, b:1}])).to.be.true;
+    expect(grouped.next()).to.equal(null);
+  });
+
 });
