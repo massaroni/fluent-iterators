@@ -11,8 +11,6 @@ and see this guy's blog post: [Cross Platform Javascript](https://blog.codecentr
 The one major difference between this build setup and the one in the template, is that this build includes bower dependencies, imported with the [debowerify](https://github.com/eugeneware/debowerify) transformer.
 This build only runs in-browser tests, because mocha can't resolve the bower dependencies on its own, but browserify does bundle them into the browser tests.
 
-## Examples
-
 ### Primer
 
 According to this library, an "iterator" is any object that has a ```next()``` function, like this one:
@@ -37,17 +35,32 @@ var myCounterIterator = {
 };
 ```
 
+Iterator Utils provides fluent syntax for transforming iterators, and you can wrap your custom iterator so that you can use this syntax:
+
+```javascript
+var iterators = require('iteratorutils');
+
+iterators.asIterator(myCounterIterator).group(...).memoize().window(...).mergeSortedIterators([...]).toArray();
+```
+
+Or you can get a new iterator from an array:
+
+```javascript
+['a', 'b', 'c'].iterator().group(...).memoize().window(...).mergeSortedIterators([...]).toArray();
+```
+
+## Examples
+
 You can import this package a la CommonJS, and use exported classes. ArrayIterator will iterate over an array, once.
 
 ```javascript
+var iterators = require('iteratorutils');
 
-    var iterators = require('iteratorutils');
+var it = new iterators.ArrayIterator([1, 2]);
 
-    var it = new iterators.ArrayIterator([1, 2]);
-
-    it.next(); // 1
-    it.next(); // 2
-    it.next(); // null
+it.next(); // 1
+it.next(); // 2
+it.next(); // null
 ```
 
 Or you can use syntactic sugar, but you still have to require the module.
