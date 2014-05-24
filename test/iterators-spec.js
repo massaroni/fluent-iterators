@@ -168,4 +168,28 @@ describe('Iterator Utils', function () {
     expect(replayer.next()).to.equal(null);
   });
 
+  it('should group consecutive equal numbers from a source array, using their strict equality, by default.', function () {
+    var source = [5, 2, 2, 4, 4, 4, 1, 7, 2, 2].iterator();
+    var grouped = new Iterators.GroupingIterator(source);
+
+    expect(Object.equal(grouped.next(), [5])).to.be.true;
+    expect(Object.equal(grouped.next(), [2, 2])).to.be.true; // it can capture contiguous groups
+    expect(Object.equal(grouped.next(), [4, 4, 4])).to.be.true; // it can capture any length group
+    expect(Object.equal(grouped.next(), [1])).to.be.true;
+    expect(Object.equal(grouped.next(), [7])).to.be.true; // it won't group consecutive individuals
+    expect(Object.equal(grouped.next(), [2, 2])).to.be.true; // it can re-capture groups of values it's already captured
+    expect(grouped.next()).to.equal(null); // it emits a null end-of-stream token
+  });
+
+  it('should group consecutive equal objects using a callback function.', function () {
+    var source = [{a:5, b:1}, {a:2, b:1}, {a:2, b:1}].iterator();
+    var grouped = new Iterators.GroupingIterator(source, function (lhs, rhs) {
+      return lhs.a === rhs.a; // this function doesn't need to handle null end-of-stream tokens
+    });
+
+    expect(Object.equal(grouped.next(), [{a:5, b:1}])).to.be.true;
+    expect(Object.equal(grouped.next(), [{a:2, b:1}, {a:2, b:1}])).to.be.true;
+    expect(grouped.next()).to.equal(null);
+  });
+
 });

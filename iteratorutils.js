@@ -7,6 +7,10 @@ var PriorityQueue = require('priorityqueuejs');
 require('sugar');
 var util = require('./lib/util');
 
+var group = require('./lib/group');
+
+exports.GroupingIterator = group.GroupingIterator;
+
 /**
  * Build an iterator that iterates over an array once. This skips over any null or undefined elements,
  * and only returns null to indicate end-of-stream.
