@@ -5,12 +5,7 @@ var Preconditions = require('precondition');
 var _ = require('underscore');
 var PriorityQueue = require('priorityqueuejs');
 require('sugar');
-
-
-var checkIsIterator = function (iterator) {
-  Preconditions.check(_.isObject(iterator), 'Illegal iterator: Not an object.');
-  Preconditions.check(_.isFunction(iterator.next), 'Illegal iterator: Missing next() function.');
-};
+var util = require('./lib/util');
 
 /**
  * Build an iterator that iterates over an array once. This skips over any null or undefined elements,
@@ -47,10 +42,6 @@ Array.prototype.iterator = function () {
   return new exports.ArrayIterator(this);
 };
 
-var strictEquality = function (lhs, rhs) {
-  return lhs === rhs;
-};
-
 /**
  * Reduce contiguous equal objects returned by a delegate iterator.
  * This iterator will call ahead to the delegate iterator, and buffer the next item.
@@ -58,11 +49,11 @@ var strictEquality = function (lhs, rhs) {
  * @constructor
  */
 exports.IteratorAggregator = function (delegateIterator, reduce, isEqual) {
-  checkIsIterator(delegateIterator);
+  util.checkIsIterator(delegateIterator);
   Preconditions.checkType(_.isFunction(reduce), 'Undefined reducer function.');
 
   if (Js.isNothing(isEqual)) {
-    isEqual = strictEquality;
+    isEqual = util.strictEquality;
   } else {
     Preconditions.checkType(_.isFunction(isEqual), 'Expected isEqual function, but was %s', isEqual);
   }
@@ -144,7 +135,7 @@ exports.SortedIteratorMerger = function (iterators, comparator) {
 
   for (var i = 0; i < iterators.length; i++) {
     var iterator = iterators[i];
-    checkIsIterator(iterator);
+    util.checkIsIterator(iterator);
     var item = iterator.next();
 
     if (Js.isSomething(item)) {
@@ -193,7 +184,7 @@ exports.MemoizedIteratorReplay = function (memoized) {
  * @constructor
  */
 exports.MemoizedIterator = function (iterator) {
-  checkIsIterator(iterator);
+  util.checkIsIterator(iterator);
 
   var history = [];
 
