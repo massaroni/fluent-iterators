@@ -2,7 +2,7 @@
   "name": "iteratorutils",
   "version": "0.0.1",
   "author": "Kevin Massaroni",
-  "description": "Library for transforming endless iterators: merge, aggregate, memoize, etc.",
+  "description": "Library of iterator utils: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
   "repository": {
     "type": "git",
     "url": "git://github.com/massaroni/iterator-utils"

@@ -1,0 +1,24 @@
+{
+  "name": "iterator-utils",
+  "version": "0.0.1",
+  "homepage": "https://github.com/massaroni/iterator-utils",
+  "authors": [
+    "Kevin Massaroni <kevinmassaroni@gmail.com>"
+  ],
+  "description": "Library of iterator utils: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
+  "main": [
+    "browser/dist/iteratorutils.standalone.js"
+  ],
+  "keywords": [
+    "iterator",
+    "sort",
+    "merge",
+    "memoize",
+    "reduce",
+    "group"
+  ],
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+  }
+}
