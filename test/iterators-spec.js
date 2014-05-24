@@ -40,7 +40,12 @@ describe('Iterator Utils', function () {
   });
 
   it('should aggregate duplicate items based on an equality function paramter.', function () {
-    var stream = [{x:1}, {x:5}, {x:5}, {x:2}].iterator().aggregate(
+    var stream = [
+      {x: 1},
+      {x: 5},
+      {x: 5},
+      {x: 2}
+    ].iterator().aggregate(
       function (lhs, rhs) {
         return {x: lhs.x + rhs.x };
       }, function (lhs, rhs) {
