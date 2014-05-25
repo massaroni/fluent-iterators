@@ -20,9 +20,14 @@ Add this line to your bower.json file:
 
 ## Examples
 
-### Primer
+This library provides all these fluent functions for building transformative iterators. You can chain together a pipeline of iterators that transform a stream of objects as they're pulled through.
 
-According to this library, an "iterator" is any object that has a ```next()``` function, like this one:
+```javascript
+['a', 'b', 'c'].iterator().transform(...).group(...)
+  .memoize().window(...).mergeSortedIterators([...]).aggregate(...).toArray();
+```
+
+In this framework, an "iterator" is any object with a ```next()``` function, like this one.
 
 ```javascript
 var c = 0;
@@ -34,7 +39,7 @@ var myCounterIterator = {
 ```
 
 
-There's no ```hasNext()``` function, so iterators indicate end-of-stream by returning ```null``` or ```undefined``` from the ```next()``` function. For example, this iterator terminates after 10 iterations:
+There's no ```hasNext()``` function, so iterators indicate end-of-stream by returning ```null``` or ```undefined``` from the ```next()``` function. For example, this iterator terminates after 10 iterations.
 
 ```javascript
 var c = 0;
@@ -46,42 +51,42 @@ var myCounterIterator = {
 ```
 
 
-You get fluent syntax for transforming iterators, and you can wrap your custom iterators so that you can use this syntax:
+You can import this package via CommonJS, and either instantiate exported classes, or use the fluent syntax. You will need to wrap your hand made iterator objects to use the fluent syntax with them, using the ```asIterator(iterator)``` utility function available in the CommonJS module exports, or on the FluentIterators global variable, in the standalone bundle.
+
+```javascript
+// in CommonJS
+var iterators = require('fluent-iterators');
+
+iterators.asIterator(myCounterIterator).group(...)
+  .memoize().window(...).mergeSortedIterators([...]).toArray();
+```
+
+```javascript
+// in standalone mode, with the FluentIterators global variable.
+FluentIterators.asIterator(myCounterIterator).group(...)
+  .memoize().window(...).mergeSortedIterators([...]).toArray();
+```
+
+
+You can get a new iterator from an array, with fluent syntax.
 
 ```javascript
 var iterators = require('fluent-iterators');
 
-iterators.asIterator(myCounterIterator).group(...).memoize().window(...).mergeSortedIterators([...]).toArray();
-```
-
-
-Or you can get a new iterator from an array:
-
-```javascript
-['a', 'b', 'c'].iterator().group(...).memoize().window(...).mergeSortedIterators([...]).toArray();
-```
-
-
-### CommonJS
-
-You can import this package a la CommonJS, and use exported classes. ArrayIterator will iterate over an array, once.
-
-```javascript
-var iterators = require('fluent-iterators');
-
-var it = new iterators.ArrayIterator([1, 2]);
+var it = [1, 2].iterator();
 
 it.next(); // 1
 it.next(); // 2
 it.next(); // null
 ```
 
-Or you can use syntactic sugar, but you still have to require the module.
+
+Or by instantiating the exported class.
 
 ```javascript
 var iterators = require('fluent-iterators');
 
-var it = [1, 2].iterator();
+var it = new iterators.ArrayIterator([1, 2]);
 
 it.next(); // 1
 it.next(); // 2
@@ -291,9 +296,7 @@ summed.next(); // null
 ## Acknowledgements
 
 See this great template for starting a project like this one: [browserify-grunt-mocha-template](https://github.com/basti1302/browserify-grunt-mocha-template),
-and see this guy's blog post: [Cross Platform Javascript](https://blog.codecentric.de/en/2014/02/cross-platform-javascript/).
-The one major difference between this build setup and the one in the template, is that this build includes bower dependencies, imported with the [debowerify](https://github.com/eugeneware/debowerify) transformer.
-This build only runs in-browser tests, because mocha can't resolve the bower dependencies on its own, but browserify does bundle them into the browser tests.
+and see the blog post that goes with it: [Cross Platform Javascript](https://blog.codecentric.de/en/2014/02/cross-platform-javascript/).
 
 ## License
 
