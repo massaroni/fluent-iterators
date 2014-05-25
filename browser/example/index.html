@@ -2,14 +2,14 @@
   <head>
     <meta charset="utf-8">
     <title>Browserify Example</title>
-    <script src="../dist/iteratorutils.standalone.min.js"></script>
+    <script src="../dist/fluent-iterators.standalone.min.js"></script>
   </head>
   <body>
     <p><span id="q1">[0, 2, 9, 10, 11, 20]</span></p>
     <p><span id="q2">[1, 3, 3, 10, 12]</span></p>
     <p><span id="a">It didn't work.</span></p>
     <script>
-        var i1 = new iteratorutils.ArrayIterator([0, 2, 9, 10, 11, 20]);
+        var i1 = new FluentIterators.ArrayIterator([0, 2, 9, 10, 11, 20]);
         var i2 = [1, 3, 3, 10, 12].iterator();
         var merged = i1.mergeSortedIterators([i2]);
 

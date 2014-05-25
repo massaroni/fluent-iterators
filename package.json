@@ -1,8 +1,9 @@
 {
-  "name": "iteratorutils",
+  "name": "fluent-iterators",
+  "globalName": "FluentIterators",
   "version": "0.0.1",
   "author": "Kevin Massaroni",
-  "description": "Library of iterator utils: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
+  "description": "A library of iterators: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
   "repository": {
     "type": "git",
     "url": "git://github.com/massaroni/iterator-utils"
@@ -10,7 +11,7 @@
   "scripts": {
     "test": "grunt"
   },
-  "main": "./iteratorutils",
+  "main": "./fluent-iterators",
   "dependencies": {
     "underscore": "~1.6.0",
     "sugar": "~1.4.1",
@@ -36,6 +37,7 @@
   "browser": {
     "./lib/optional": false
   },
+  "readmeFilename": "README.md",
   "testling": {
     "browsers": [
       "ie9", "ie10",

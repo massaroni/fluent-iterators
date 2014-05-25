@@ -21,17 +21,17 @@ pushd $bin_path/.. > /dev/null
 # usages in browser/example/index.html (script tag) and
 # browser/example/index-require.html (RequireJS).
 browserify \
-  --entry iteratorutils.js \
-  --outfile browser/dist/iteratorutils.standalone.js \
-  --standalone iterator_utils
+  --entry fluent-iterators.js \
+  --outfile browser/dist/fluent-iterators.standalone.js \
+  --standalone FluentIterators
 
 # This browserify build can be required by other browserify modules that
 # have been created with an --external parameter. See
 # browser/test/index.html for an example.
 browserify \
-  --entry iteratorutils.js \
-  --outfile browser/dist/iteratorutils.require.js \
-  --require ./iteratorutils
+  --entry fluent-iterators.js \
+  --outfile browser/dist/fluent-iterators.require.js \
+  --require ./fluent-iterators
 
 # These are the browserified tests. We need to browserify the tests to be
 # able to run the mocha tests while writing the tests as clean, simple
@@ -41,6 +41,6 @@ browserify \
 browserify \
   --entry browser/test/suite.js \
   --outfile browser/test/browserified_tests.js \
-  --external ./iteratorutils.js
+  --external ./fluent-iterators.js
 
 popd > /dev/null

@@ -1,13 +1,13 @@
 {
-  "name": "iterator-utils",
+  "name": "fluent-iterators",
   "version": "0.0.1",
-  "homepage": "https://github.com/massaroni/iterator-utils",
+  "homepage": "https://github.com/massaroni/fluent-iterators",
   "authors": [
     "Kevin Massaroni <kevinmassaroni@gmail.com>"
   ],
-  "description": "Library of iterator utils: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
+  "description": "A library of iterators: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
   "main": [
-    "browser/dist/iteratorutils.standalone.js"
+    "browser/dist/fluent-iterators.standalone.js"
   ],
   "keywords": [
     "iterator",
@@ -15,7 +15,8 @@
     "merge",
     "memoize",
     "reduce",
-    "group"
+    "group",
+    "window"
   ],
   "license": "MIT",
   "private": false,

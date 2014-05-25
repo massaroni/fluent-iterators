@@ -12,22 +12,22 @@ pushd $bin_path/.. > /dev/null
 
 watchify \
   --entry iteratorutils.js \
-  --outfile browser/dist/iteratorutils.standalone.js \
-  --standalone iteratorutils \
+  --outfile browser/dist/fluent-iterators.standalone.js \
+  --standalone FluentIterators \
   --verbose \
   &
 
 watchify \
   --entry iteratorutils.js \
-  --outfile browser/dist/iteratorutils.require.js \
-  --require ./iteratorutils \
+  --outfile browser/dist/fluent-iterators.require.js \
+  --require ./fluent-iterators \
   --verbose \
   &
 
 watchify \
   --entry browser/test/suite.js \
   --outfile browser/test/browserified_tests.js \
-  --external ./iteratorutils.js \
+  --external ./fluent-iterators.js \
   --verbose \
   &
 

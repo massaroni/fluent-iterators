@@ -1,13 +1,13 @@
 'use strict';
 
-var Iterators = require('../iteratorutils');
+var Iterators = require('../fluent-iterators');
 
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 
 
-describe('Iterator Utils', function () {
+describe('Fluent Iterators', function () {
   it('should provide fluent generation of an array backed iterator with the .iterator() sugar function', function () {
     var stream = [1, 5, 5].iterator();
 
