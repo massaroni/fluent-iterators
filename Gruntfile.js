@@ -61,7 +61,7 @@ module.exports = function(grunt) {
         src: [ '<%= pkg.name %>.js' ],
         dest: './browser/dist/<%= pkg.name %>.require.js',
         options: {
-          alias: [ './<%= pkg.name %>.js:' ]
+          alias: [ './<%= pkg.name %>.js:<%= pkg.globalName %>' ]
         }
       },
       // These are the browserified tests. We need to browserify the tests to be
