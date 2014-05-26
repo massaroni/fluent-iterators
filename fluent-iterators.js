@@ -227,6 +227,36 @@ exports.MemoizedIterator = function (iterator) {
 };
 
 /**
+ * Terminate an iterator early.
+ *
+ * @param iterator
+ * @param limit
+ * @constructor
+ */
+exports.LimitIterator = function (iterator, limit) {
+  util.checkIsIterator(iterator);
+  Preconditions.checkType(Js.isIntegerNumber(limit), 'Expected number limit, but was %s', limit);
+
+  var count = 0;
+
+  this.next = function () {
+    if (count >= limit) {
+      return null;
+    }
+
+    var item = iterator.next();
+
+    if (Js.isNothing(item)) {
+      return null;
+    }
+
+    count++;
+
+    return item;
+  };
+};
+
+/**
  * Use a wrapper to wrap custom iterators so that you can call fluent iterator functions on it.
  *
  * @param iterator
@@ -285,6 +315,10 @@ exports.Iterator.prototype.window = function (windowSize, reducer) {
 
 exports.Iterator.prototype.transform = function (transformerFunction) {
   return new transformer.TransformerIterator(this, transformerFunction);
+};
+
+exports.Iterator.prototype.limit = function (limit) {
+  return new exports.LimitIterator(this, limit);
 };
 
 // extend Iterator abstract class

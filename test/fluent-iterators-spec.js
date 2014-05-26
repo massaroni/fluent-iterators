@@ -253,6 +253,14 @@ describe('Fluent Iterators', function () {
     expect(reduced.next()).to.equal(null);
   });
 
+  it('should limit an iterator to a predefined length.', function () {
+    var limited = ['a', 'b', 'c'].iterator().limit(2);
+
+    expect(limited.next()).to.equal('a');
+    expect(limited.next()).to.equal('b');
+    expect(limited.next()).to.equal(null);
+  });
+
   it('should drain an iterator into an array.', function () {
     var count = 0;
     var iterator = {
