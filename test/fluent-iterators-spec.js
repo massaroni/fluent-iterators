@@ -321,4 +321,15 @@ describe('Fluent Iterators', function () {
     expect(filtered.next()).to.equal(6);
     expect(filtered.next()).to.be.null;
   });
+
+  it('should provide fluent syntax on limit iterators.', function () {
+    var iterator = [1, 2, 3].iterator().limit(100).filter(function (item) {
+      return true;
+    });
+
+    expect(iterator.next()).to.equal(1);
+    expect(iterator.next()).to.equal(2);
+    expect(iterator.next()).to.equal(3);
+    expect(iterator.next()).to.be.null;
+  });
 });

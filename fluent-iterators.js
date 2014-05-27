@@ -361,6 +361,7 @@ Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, fal
 Object.merge(exports.WindowReducerIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.IteratorWrapper.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.TransformerIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.LimitIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.FilterIterator.prototype, exports.Iterator.prototype, false);
 
 // utility functions
