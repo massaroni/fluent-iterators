@@ -23,7 +23,7 @@ Add this line to your bower.json file:
 This library provides all these fluent functions for building transformative iterators. You can chain together a pipeline of iterators that transform a stream of objects as they're pulled through.
 
 ```javascript
-['a', 'b', 'c'].iterator().transform(...).group(...)
+['a', 'b', 'c'].iterator().transform(...).group(...).limit(...).filter(...)
   .memoize().window(...).mergeSortedIterators([...]).aggregate(...).toArray();
 ```
 
@@ -206,6 +206,67 @@ var grouped = source.group(function (lhs, rhs) {
 grouped.next(); // [{a:5, b:1}]
 grouped.next(); // [{a:2, b:1}, {a:2, b:1}]
 grouped.next(); // null
+```
+
+
+### Limit
+
+Terminate an iterator after a max number of iterations.
+
+```javascript
+var limited = ['a', 'b', 'c'].iterator().limit(2);
+
+limited.next(); // 'a'
+limited.next(); // 'b'
+limited.next(); // null
+```
+
+
+### Filter
+
+Filter items out of a source iterator.
+
+```javscript
+var isGreaterThanTen = function (n) {
+  return n > 10;
+};
+
+var filtered = [1, 11, 2, 12].iterator().filter(isGreaterThanTen);
+
+filtered.next(); // 11
+filtered.next(); // 12
+filtered.next(); // null
+```
+
+
+### toArray()
+
+Drain an iterator into an array.
+
+```javscript
+var gtTen = function (n) {
+  return n > 10;
+};
+
+[1, 11, 2, 12].iterator().filter(gtTen).toArray(); // [11, 12]
+```
+
+
+### Transform
+
+You can transform items from a source iterator.
+
+```javascript
+var prependA = function (n) {
+  return 'a' + n.toString();
+};
+
+var transformed = [1, 11, 2].iterator().transform(prependA);
+
+transformed.next(); // 'a1'
+transformed.next(); // 'a11'
+transformed.next(); // 'a2'
+transformed.next(); // null
 ```
 
 
