@@ -1,4 +1,6 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"FR1krT":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"FluentIterators":[function(require,module,exports){
+module.exports=require('FR1krT');
+},{}],"FR1krT":[function(require,module,exports){
 'use strict';
 
 var Js = require('./lib/js');
@@ -228,6 +230,62 @@ exports.MemoizedIterator = function (iterator) {
 };
 
 /**
+ * Terminate an iterator early.
+ *
+ * @param iterator
+ * @param limit
+ * @constructor
+ */
+exports.LimitIterator = function (iterator, limit) {
+  util.checkIsIterator(iterator);
+  Preconditions.checkType(Js.isIntegerNumber(limit), 'Expected number limit, but was %s', limit);
+
+  var count = 0;
+
+  this.next = function () {
+    if (count >= limit) {
+      return null;
+    }
+
+    var item = iterator.next();
+
+    if (Js.isNothing(item)) {
+      return null;
+    }
+
+    count++;
+
+    return item;
+  };
+};
+
+exports.FilterIterator = function (iterator, predicate) {
+  util.checkIsIterator(iterator);
+  Preconditions.checkType(_.isFunction(predicate), 'Expected a predicate function, but was %s', predicate);
+
+  this.next = function () {
+    while (true) {
+      var item = iterator.next();
+
+      if (Js.isNothing(item)) {
+        return null;
+      }
+
+      var filterValue = predicate(item);
+
+      switch (filterValue) {
+        case true:
+          return item;
+        case false:
+          break; // continue loop
+        default:
+          throw new Error('Expected predicate to return true (pass through) or false (filter out), but was ' + filterValue);
+      }
+    }
+  };
+};
+
+/**
  * Use a wrapper to wrap custom iterators so that you can call fluent iterator functions on it.
  *
  * @param iterator
@@ -288,6 +346,14 @@ exports.Iterator.prototype.transform = function (transformerFunction) {
   return new transformer.TransformerIterator(this, transformerFunction);
 };
 
+exports.Iterator.prototype.limit = function (limit) {
+  return new exports.LimitIterator(this, limit);
+};
+
+exports.Iterator.prototype.filter = function (predicate) {
+  return new exports.FilterIterator(this, predicate);
+};
+
 // extend Iterator abstract class
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
@@ -298,6 +364,8 @@ Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, fal
 Object.merge(exports.WindowReducerIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.IteratorWrapper.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.TransformerIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.LimitIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.FilterIterator.prototype, exports.Iterator.prototype, false);
 
 // utility functions
 exports.mergeSortedIterators = function (iterators, comparator) {
@@ -307,9 +375,7 @@ exports.mergeSortedIterators = function (iterators, comparator) {
 exports.asIterator = function (iterator) {
   return new exports.IteratorWrapper(iterator);
 };
-},{"./lib/group":3,"./lib/js":4,"./lib/transformer":5,"./lib/util":6,"./lib/window":7,"precondition":8,"priorityqueuejs":10,"sugar":11,"underscore":12}],"FluentIterators":[function(require,module,exports){
-module.exports=require('FR1krT');
-},{}],3:[function(require,module,exports){
+},{"./lib/group":3,"./lib/js":4,"./lib/transformer":5,"./lib/util":6,"./lib/window":7,"precondition":8,"priorityqueuejs":10,"sugar":11,"underscore":12}],3:[function(require,module,exports){
 'use strict';
 
 var Js = require('./js');
