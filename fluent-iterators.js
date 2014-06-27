@@ -351,6 +351,15 @@ exports.Iterator.prototype.filter = function (predicate) {
   return new exports.FilterIterator(this, predicate);
 };
 
+// sugar for draining the iterator
+exports.Iterator.prototype.forEach = function (itemCallback) {
+  Preconditions.checkType(_.isFunction(itemCallback), 'Expected an item callback function, but was %s', itemCallback);
+
+  for (var item = this.next(); Js.isSomething(item); item = this.next()) {
+    itemCallback(item);
+  }
+};
+
 // extend Iterator abstract class
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);

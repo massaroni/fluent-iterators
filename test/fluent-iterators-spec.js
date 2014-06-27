@@ -296,6 +296,15 @@ describe('Fluent Iterators', function () {
     expect(array.length).to.equal(2);
   });
 
+  it('should drain an interator into a callback function.', function () {
+    var sum = 0;
+    [1, 2, 3, 4].iterator().forEach(function (item) {
+      sum += item;
+    });
+
+    expect(sum).to.equal(10);
+  });
+
   it('should transform items from a source array', function () {
     var isEvenTransformer = function (item) {
       return (item % 2) === 0;
