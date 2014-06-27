@@ -1,6 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"FluentIterators":[function(require,module,exports){
-module.exports=require('FR1krT');
-},{}],"FR1krT":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"FR1krT":[function(require,module,exports){
 'use strict';
 
 var Js = require('./lib/js');
@@ -354,6 +352,15 @@ exports.Iterator.prototype.filter = function (predicate) {
   return new exports.FilterIterator(this, predicate);
 };
 
+// sugar for draining the iterator
+exports.Iterator.prototype.forEach = function (itemCallback) {
+  Preconditions.checkType(_.isFunction(itemCallback), 'Expected an item callback function, but was %s', itemCallback);
+
+  for (var item = this.next(); Js.isSomething(item); item = this.next()) {
+    itemCallback(item);
+  }
+};
+
 // extend Iterator abstract class
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
@@ -375,7 +382,9 @@ exports.mergeSortedIterators = function (iterators, comparator) {
 exports.asIterator = function (iterator) {
   return new exports.IteratorWrapper(iterator);
 };
-},{"./lib/group":3,"./lib/js":4,"./lib/transformer":5,"./lib/util":6,"./lib/window":7,"precondition":8,"priorityqueuejs":10,"sugar":11,"underscore":12}],3:[function(require,module,exports){
+},{"./lib/group":3,"./lib/js":4,"./lib/transformer":5,"./lib/util":6,"./lib/window":7,"precondition":8,"priorityqueuejs":10,"sugar":11,"underscore":12}],"FluentIterators":[function(require,module,exports){
+module.exports=require('FR1krT');
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var Js = require('./js');
