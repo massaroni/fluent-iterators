@@ -24,7 +24,7 @@ This library provides all these fluent functions for building transformative ite
 
 ```javascript
 ['a', 'b', 'c'].iterator().transform(...).group(...).limit(...).filter(...)
-  .memoize().window(...).mergeSortedIterators([...]).aggregate(...).toArray();
+  .memoize().window(...).mergeSortedIterators([...]).aggregate(...).toArray() and .forEach(callback);
 ```
 
 In this framework, an "iterator" is any object with a ```next()``` function, like this one.
@@ -226,7 +226,7 @@ limited.next(); // null
 
 Filter items out of a source iterator.
 
-```javscript
+```javascript
 var isGreaterThanTen = function (n) {
   return n > 10;
 };
@@ -243,12 +243,25 @@ filtered.next(); // null
 
 Drain an iterator into an array.
 
-```javscript
+```javascript
 var gtTen = function (n) {
   return n > 10;
 };
 
 [1, 11, 2, 12].iterator().filter(gtTen).toArray(); // [11, 12]
+```
+
+
+### forEach()
+
+Drain an iterator into a callback function, like you can do with ararys.
+
+```javascript
+var sum = 0;
+[1, 2, 3, 4].iterator().forEach(function (item) {
+  sum += item;
+});
+// sum == 10
 ```
 
 
