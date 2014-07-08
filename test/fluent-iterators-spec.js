@@ -280,6 +280,41 @@ describe('Fluent Iterators', function () {
     expect(limited.next()).to.equal(null);
   });
 
+  it('should build new ArrayIterators from arrays, and ObjectIterators from objects.', function () {
+    expect(Iterators.toIterator([]) instanceof Iterators.ArrayIterator).to.equal(true);
+    expect(Iterators.toIterator({}) instanceof Iterators.ObjectIterator).to.equal(true);
+  });
+
+  it('should extract key value pairs from an object.', function () {
+    var obj = {
+      a: 1,
+      '77': 'jackpot'
+    };
+
+    var iterator = new Iterators.ObjectIterator(obj);
+
+    var foundA = false;
+    var found77 = false;
+
+    iterator.forEach(function (item) {
+      switch (item.key) {
+        case 'a':
+          foundA = true;
+          expect(item.value).to.equal(1);
+          return;
+        case '77':
+          found77 = true;
+          expect(item.value).to.equal('jackpot');
+          return;
+        default:
+          throw new Error('Unexpected key: ' + item.key);
+      }
+    });
+
+    expect(foundA).to.equal(true);
+    expect(found77).to.equal(true);
+  });
+
   it('should drain an iterator into an array.', function () {
     var count = 0;
     var iterator = {

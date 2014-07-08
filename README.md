@@ -94,6 +94,25 @@ it.next(); // null
 ```
 
 
+Or with the factory function toIterator(), with either an array or an object.
+You can iterate over the key value pairs in any javascript object, with toIterator().
+
+```javascript
+var iterators = require('fluent-iterators');
+
+var it = iterators.toIterator([1, 2]);
+
+it.next(); // 1
+it.next(); // 2
+it.next(); // null
+
+var objIt = iterators.toIterator({foo: bar});
+
+objIt.next(); // {key: 'foo', value: 'bar'}
+objIt.next(); // null
+```
+
+
 ### Merge Sorted Iterators
 
 You can merge sorted iterators into a single, sorted iterator.
