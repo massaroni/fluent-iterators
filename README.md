@@ -7,12 +7,12 @@ This is a CommonJS package compatible with all AMD loaders, like RequireJS, avai
 
 ### Bower
 
-Add this line to your bower.json file:
+Add this line to your bower.json file.  It provides the ```FluentIterators``` global, and adds the syntactic sugar ```Array.iterator()```.
 
 ```json
  "dependencies": {
  ...
-  "fluent-iterators": "~0.0.1"
+  "fluent-iterators": "~1.1.0"
  ...
  }
 ```

@@ -1,7 +1,7 @@
 {
   "name": "fluent-iterators",
   "globalName": "FluentIterators",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Kevin Massaroni",
   "description": "A library of iterators: group, transform, sorted-merge, memoize/replay, sliding-window reduce, etc.",
   "repository": {

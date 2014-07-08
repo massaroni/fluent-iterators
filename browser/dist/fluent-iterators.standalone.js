@@ -51,6 +51,31 @@ Array.prototype.iterator = function () {
   return new exports.ArrayIterator(this);
 };
 
+exports.ObjectIterator = function (obj) {
+  Preconditions.checkType(_.isObject(obj), 'Expected an Object, but was %s', obj);
+  var kvPairs = [];
+
+  Object.keys(obj, function (key, value) {
+    kvPairs.push({key: key, value: value});
+  });
+
+  var iterator = kvPairs.iterator();
+
+  this.next = iterator.next;
+};
+
+exports.toIterator = function (obj) {
+  if (_.isArray(obj)) {
+    return new exports.ArrayIterator(obj);
+  }
+
+  if (_.isObject(obj)) {
+    return new exports.ObjectIterator(obj);
+  }
+
+  throw new Error('Expected an array or an object, but was: ' + obj);
+};
+
 /**
  * Reduce contiguous equal objects returned by a delegate iterator.
  * This iterator will call ahead to the delegate iterator, and buffer the next item.
@@ -365,6 +390,7 @@ exports.Iterator.prototype.forEach = function (itemCallback) {
 Object.merge(exports.IteratorAggregator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.SortedIteratorMerger.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.ArrayIterator.prototype, exports.Iterator.prototype, false);
+Object.merge(exports.ObjectIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.MemoizedIterator.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.MemoizedIteratorReplay.prototype, exports.Iterator.prototype, false);
 Object.merge(exports.GroupingIterator.prototype, exports.Iterator.prototype, false);
